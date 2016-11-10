@@ -1,0 +1,3 @@
+maxConnections: 100
+maxUsers: 200
+path: /root/opensm_server
