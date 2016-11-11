@@ -30,7 +30,7 @@ int main(int argc,char *argv[]){
 	if(argc > 1)
 		if(hasArg(argc,argv,"-v"))
 			verbose = 1;
-	struct file_data *orig = malloc(sizeof(struct file_data *));
+	struct file_data *orig = malloc(sizeof(struct file_data *) * sizeof(*orig));
 	orig->alloc = 1;
 	orig->data_length = 20;
 	orig->path_len = 4;

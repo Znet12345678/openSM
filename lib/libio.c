@@ -9,7 +9,7 @@
 #include <string.h>
 #include <opensm_libio.h>
 struct txt_data *parse_txt_data_file(FILE *f){
-	struct txt_data *ret = malloc(sizeof(struct txt_data *));
+	struct txt_data *ret = malloc(sizeof(struct txt_data *) * sizeof(*ret));
 	fseek(f,1,SEEK_SET);
 	int size = getc(f) << 24 | getc(f) << 16 | getc(f) << 8 | getc(f);
 	int *buf = malloc(size);
@@ -54,7 +54,7 @@ int write_txt_data_file(FILE *f,struct txt_data *d){
 	return 1;
 }
 struct txt_data *parse_txt_data(const char *buf){
-	struct txt_data *ret = malloc(sizeof(struct txt_data *));
+	struct txt_data *ret = malloc(sizeof(struct txt_data *) * sizeof(*ret));
 	ret->alloc = buf[0];
         ret->data_length = buf[1] << 24 | buf[2] << 16 | buf[3] << 8 | buf[4];
         ret->txt_length = buf[5] << 8 | buf[6];
@@ -70,7 +70,7 @@ struct txt_data *parse_txt_data(const char *buf){
 
 }
 struct file_data *parse_file_data_file(FILE *f){
-	struct file_data *ret = malloc(sizeof(struct file_data *));
+	struct file_data *ret = malloc(sizeof(struct file_data *) * sizeof(*ret));
 	int c;
 	int len;
 	fseek(f,1,SEEK_SET);

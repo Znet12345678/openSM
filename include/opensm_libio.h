@@ -8,6 +8,9 @@
 #include <libmisc.h>
 #include <stdint.h>
 #define END_BYTE 0x7f
+/*
+*Contains data on a message on a wall
+*/
 struct txt_data{
 	int alloc;
 	int data_length;
@@ -16,6 +19,9 @@ struct txt_data{
 	char username[80];
 	char txt[1024];
 };
+/*
+*Contains data on the location of a file posted to a wall
+*/
 struct file_data{
 	int alloc;
 	uint32_t data_length;
@@ -25,11 +31,18 @@ struct file_data{
 	char username[80];
 	char path[1024];
 };
+/*
+*Contains server config
+*not yet implemented
+*/
 struct config{
 	uint32_t maxConnections;
 	uint32_t maxUsers;
 	char path[80];
 };
+/*
+*Contains data on the properties and contents of a file posted to a wall
+*/
 struct file_ent{
 	int alloc;
 	int entlen;

@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <sys/select.h>
 int main(int argc,char *argv[]){
 	printf("openSM Server V0.1-Alpha\n");
 	printf("Starting up\n");

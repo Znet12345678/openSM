@@ -15,7 +15,7 @@ int main(int argc,char *argv[]){
 	int es_sock,addrlen;
 	int port = 2718;
 	es_sock = socket(AF_INET,SOCK_STREAM,0);
-	struct sockaddr_in *server_address = malloc(sizeof(struct sockaddr_in *));
+	struct sockaddr_in *server_address = malloc(sizeof(struct sockaddr_in *) * sizeof(*server_address));
 	server_address->sin_family = AF_INET;
 	server_address->sin_port = htons(2718);
 	server_address->sin_addr.s_addr = inet_addr(argv[1]);

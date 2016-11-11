@@ -1,8 +1,8 @@
 CC = cc
 AR = ar
-OBJS = obj/libio.o obj/libmisc.o obj/libclient.o 
+OBJS = obj/libio.o obj/libmisc.o obj/libclient.o obj/libuser.o
 LDFLAGS =  -L${PWD} -Wl,-rpath=${PWD}
-CFLAGS = -Werror -Iinclude -O2 -g -fPIC
+CFLAGS = -Werror -Iinclude -O2 -g -fPIC -std=c99
 PREFIX=/usr/local
 all:
 	@echo "CC libio.o"
@@ -11,6 +11,8 @@ all:
 	@${CC} -c lib/libmisc.c -o obj/libmisc.o ${CFLAGS}
 	@echo "CC libclient.o"
 	@${CC} -c lib/libclient.c -o obj/libclient.o ${CFLAGS}
+	@echo "CC libuser.o"
+	@${CC} -c lib/libuser.c -o obj/libuser.o ${CFLAGS}
 	@echo "LDCC server.proto"
 	@${CC}  server/server.c -o server/server.proto ${CFLAGS}
 	@echo "LDCC client.proto"
@@ -32,7 +34,7 @@ all:
 	@echo "LDCC libsm.so"
 	@${CC} -o libsm.so ${OBJS} -shared ${LDFLAGS} ${CFLAGS}
 	@echo "LDCC client_txt_generic"
-	@${CC} -o ${LDFLAGS} ${CFLAGS} -o client_txt_generic src/client_txt_generic.c -lsm
+	@${CC} ${LDFLAGS} ${CFLAGS} -o client_txt_generic src/client_txt_generic.c -lsm
 	@echo "TEST tests"
 	@make -C tests tests
 install:

@@ -14,7 +14,7 @@ int main(int arg,char *argv[]){
 		printf("Test failed due to file I/O error(Check your permissions)\n");
 		return -1;
 	}
-	struct txt_data *data = malloc(sizeof(struct txt_data *));
+	struct txt_data *data = malloc(sizeof(struct txt_data *) * sizeof(*data));
 	data->alloc = 1;
 	data->data_length = 22;
 	data->txt_length = 4;
@@ -28,7 +28,7 @@ int main(int arg,char *argv[]){
 		printf("Test failed due to file I/O error(Check your permissions)\n");
 		return -1;
 	}
-	struct txt_data *read = malloc(sizeof(struct txt_data *));
+	struct txt_data *read = malloc(sizeof(struct txt_data *) * sizeof(*read));
 	read = parse_txt_data_file(in);
 	if(__txt_cmp(read,data) == -1){
 		printf("Test failed!\n");
