@@ -1,7 +1,7 @@
-CC = cc
+CC = gcc
 AR = ar
 OBJS = obj/libio.o obj/libmisc.o obj/libclient.o obj/libuser.o
-LDFLAGS =  -L${PWD} -Wl,-rpath=${PWD}
+LDFLAGS =  -L${PWD} 
 CFLAGS = -Werror -Iinclude -O2 -g -fPIC -std=c99
 PREFIX=/usr/local
 all:
