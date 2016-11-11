@@ -1,6 +1,6 @@
 CC = gcc
 AR = ar
-LDFLAGS =  -L${PWD} -L${PWD}/.. -lsm -Wl,-rpath=${PWD}
+LDFLAGS =  -L${PWD} -L${PWD}/.. -lsm
 CFLAGS = -Werror -I../include -O2 -g -fPIC -std=c99
 PREFIX=/usr/local
 tests:
