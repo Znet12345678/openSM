@@ -15,4 +15,4 @@ tests:
 	@echo "LDCC opensm-libuser-test"
 	@${CC} -o opensm-libuser-test opensm-libuser-test.c ${CFLAGS} ${LDFLAGS}
 	@echo "TEST opensm-libuser-test"
-	@./opensm-libuser-test -v
+	@./opensm-libuser-test

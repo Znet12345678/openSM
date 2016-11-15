@@ -22,7 +22,6 @@ struct client_user_dat *parse_user_file(FILE *in){
 int write_user_file(FILE *out,struct client_user_dat *d){
 	if(!(out))
 		return -1;
-	printf("Dump [%d] [%d] [%d] [%s] [%s]\n",d->size,d->userlen,d->passlen,d->user,d->pass);
 	putc(d->size,out);
 	putc(d->userlen,out);
 	putc(d->passlen,out);
