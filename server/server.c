@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <strings.h>
+#include <errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/types.h>
@@ -83,6 +85,66 @@ int main(int argc,char *argv[]){
 					break;
 				printf("Got byte %#2x\n",c);
 			}
+			printf("Recieving Info from Client\n");
+			printf("Waiting for initial character\n");
+			c = 0;
+			while(1){
+				recv(new_socket,&c,1,0);
+				if(c == end)
+					break;
+				printf("Did not recieve byte sleeping 1 second\n");
+				sleep(1);
+			}
+			printf("Got byte!\n");
+			printf("Recieving info\n");
+			int *dbuf = malloc(1024);
+			c = 0;
+			int size = 0;
+			while(1){
+				recv(new_socket,&c,1,0);
+				if(c == end)
+					break;
+				printf("Got byte:%#02x\n",c);
+				dbuf[size] = c;
+				size++;
+			}
+			FILE *f;
+			char cc = 'a';
+			char *name = malloc(1024);
+			printf("Searching for avaliable file name\n");
+			*name = cc;
+			int n = 0;
+			while(1){
+				if(!(f = fopen(name,"rb"))){
+					int errsv = errno;
+					if(errsv == ENOENT)
+						break;
+					perror("I/O Error");
+					return -1;
+				}else{
+					if(cc <= 'z'){
+						name[n] = cc;
+						cc++;
+					}
+					else{
+						n++;
+						cc = 'a';
+						name[n] = cc;
+					}
+				}
+				fclose(f);
+			}
+			printf("Opening file: %s\n",name);
+			FILE *out = fopen(name,"wb");
+			if(!out){
+				perror("Error opening file");
+				return -1;
+			}
+			printf("Writing %d bytes\n",size);
+			for(int i = 0; i < size;i++)
+				fputc(dbuf[i],out);
+			fclose(out);
+			printf("Done\n");
 			int i = 0;
 			while(client_socket[i] != 0)
 				i++;

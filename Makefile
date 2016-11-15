@@ -14,9 +14,9 @@ all:
 	@echo "CC libuser.o"
 	@${CC} -c lib/libuser.c -o obj/libuser.o ${CFLAGS}
 	@echo "LDCC server.proto"
-	@${CC}  server/server.c -o server/server.proto ${CFLAGS}
+	@${CC}  server/server.c -o server/server.proto ${CFLAGS} ${LDFLAGS} -lsm
 	@echo "LDCC client.proto"
-	@${CC} client/client.c -o client/client.proto ${CFLAGS}
+	@${CC} client/client.c -o client/client.proto ${CFLAGS} ${LDFLAGS} -lsm
 	@echo "LDCC tools_dDat"
 	@${CC} ${OBJS} src/tools_dDat.c -o tools_dDat ${LDFLAGS} ${CFLAGS}
 	@echo "LDCC tools_wfDat"
