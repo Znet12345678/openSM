@@ -31,3 +31,15 @@ int write_user_file(FILE *out,struct client_user_dat *d){
 		putc(d->pass[i],out);
 	return 1;
 }
+struct client_user_dat *parse_user_raw(int *buf){
+	struct client_user_dat *ret = malloc(sizeof(*ret) * sizeof(struct client_user_dat *));
+	ret->size = buf[0];
+	ret->userlen = buf[1];
+	ret->passlen = buf[2];
+	int i;
+	for(i = 0; i < ret->userlen;i++)
+		ret->user[i] = buf[3 + i];
+	for(int j = 0; j < ret->passlen;j++)
+		ret->pass[j] = buf[3 + i + j];
+	return ret;
+}

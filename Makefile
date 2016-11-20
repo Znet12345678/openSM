@@ -1,8 +1,8 @@
 CC = gcc
 AR = ar
-OBJS = obj/libio.o obj/libmisc.o obj/libclient.o obj/libuser.o
+OBJS = obj/libio.o obj/libmisc.o obj/libclient.o obj/libuser.o obj/libsh.o
 LDFLAGS =  -L${PWD} -Wl,-rpath=${PWD}
-CFLAGS = -Werror -Iinclude -O2 -g -fPIC -std=c99
+CFLAGS = -Werror -Iinclude -O2 -g -fPIC -std=gnu99
 PREFIX=/usr/local
 all:
 	@echo "CC libio.o"
@@ -13,6 +13,8 @@ all:
 	@${CC} -c lib/libclient.c -o obj/libclient.o ${CFLAGS}
 	@echo "CC libuser.o"
 	@${CC} -c lib/libuser.c -o obj/libuser.o ${CFLAGS}
+	@echo "CC libsh.o"
+	@${CC} -c lib/libsh.c -o obj/libsh.o ${CFLAGS}
 	@echo "AR libsm.a"
 	@${AR} rcs libsm.a ${OBJS}
 	@echo "LDCC libsm.so"
@@ -35,6 +37,8 @@ all:
 	@${CC} ${OBJS} src/dev_send_txt.c -o dev_send_txt ${LDFLAGS} ${CFLAGS}
 	@echo "LDCC client_txt_generic"
 	@${CC} ${LDFLAGS} ${CFLAGS} -o client_txt_generic src/client_txt_generic.c -lsm
+	@echo "LDCC dump_serverconf"
+	@${CC} ${LDFLAGS} ${CFLAGS} -o dump_serverconf debug/dump_serverconf.c ${OBJS}
 	@echo "TEST tests"
 	@make -C tests tests
 install:

@@ -21,4 +21,9 @@ struct client_user_dat *parse_user_file(FILE *in);
 *Returns 1 on success or <=0 on error
 */
 int write_user_file(FILE *out,struct client_user_dat *d);
+/*
+*Parses user data from memmory
+*shouldn't encounter any errors will Segfault if there is any issues with memory
+*/
+struct client_user_dat *parse_user_raw(int *buf);
 #endif

@@ -10,7 +10,7 @@
 #include <opensm_libio.h>
 struct txt_data *parse_txt_data_file(FILE *f){
 	struct txt_data *ret = malloc(sizeof(struct txt_data *) * sizeof(*ret));
-	fseek(f,1,SEEK_SET);
+	/*fseek(f,1,SEEK_SET);
 	int size = getc(f) << 24 | getc(f) << 16 | getc(f) << 8 | getc(f);
 	int *buf = malloc(size);
 	fseek(f,0,SEEK_SET);
@@ -29,7 +29,15 @@ struct txt_data *parse_txt_data_file(FILE *f){
 	for(j = 0;j < ret->username_len;j++)
 		ret->username[j] = buf[j + 8];
 	for(i = 0; i < ret->txt_length;i++)
-		ret->txt[i] = buf[i + 8 + j];
+		ret->txt[i] = buf[i + 8 + j];*/
+	ret->alloc = getc(f);
+	ret->data_length = getc(f) << 24 | getc(f) << 16 | getc(f) << 8 | getc(f);
+	ret->txt_length = getc(f) << 8 | getc(f);
+	ret->username_len = getc(f);
+	for(int i = 0; i < ret->username_len;i++)
+		ret->username[i] = getc(f);
+	for(int i = 0; i < ret->txt_length;i++)
+		ret->txt[i] = getc(f);
 
 	return ret;
 }
