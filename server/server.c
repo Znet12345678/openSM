@@ -278,6 +278,7 @@ int main(int argc,char *argv[]){
 							raw[n] = c;
 							n++;
 						}
+						printf(".\n");
 						char *path = malloc(1024);
 						int i = 0;
 						for(i = 0; i < strlen(cfg->story_path);i++)

@@ -14,6 +14,7 @@
 #define CMD_CSTRY 0x01
 #define CMD_WS 0x02
 #define CMD_LS 0x03
+#define CMD_EXIT 0x04
 #define END 0x7F
 #define END_SEC 0x6F
 //prints Developer warning

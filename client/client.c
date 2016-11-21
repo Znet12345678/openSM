@@ -39,7 +39,7 @@ int main(int argc,char *argv[]){
 	printf("Sending command\n");
 	for(int i = 0; i < 10;i++)
 		send(sock,&cmd[i],1,0);
-	int end = 0x7F;
+	int end = END;
 	send(sock,&end,1,0);
 	int err = mkdir("/usr/local/share/opensm",0777);
 	FILE *f = fopen("/usr/local/share/opensm/user.dat","rb");
@@ -106,7 +106,9 @@ int main(int argc,char *argv[]){
 		cmd[strlen(cmd) - 1] = 0;
 		printf("Processing command: %s\n",cmd);
 		int cmds = parse_command(cmd);
-		if(cmds == CMD_LSU || cmds == CMD_LS)
+		if(cmds == CMD_EXIT)
+			break;
+		else if(cmds == CMD_LSU || cmds == CMD_LS)
 			send(sock,&cmds,1,0);
 		else if(cmds == CMD_WS){
 			send(sock,&cmds,1,0);

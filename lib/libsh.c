@@ -41,6 +41,8 @@ int parse_command(char *cmd){
 		return CMD_WS;
 	else if(strcmp(args[0],"ls") == 0)
 		return CMD_LS;
+	else if(strcmp(args[0],"exit") == 0)
+		return CMD_EXIT;
 	else
 		return ERR_INVALIDCMD;
 }
