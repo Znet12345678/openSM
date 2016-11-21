@@ -5,6 +5,7 @@ Client and server can authenticate
 You can post to your wall(very buggy)
 You can read others walls(Very buggy)
 Some I/O Functions implemented that will help in the future
+<<<<<<< HEAD
 # How to Use It?
 There are two components that you're likely intersted in. And that's the client and the server
 Both are easy to use, for the server run server/server.proto CONFIG_FILE_NAME
@@ -71,3 +72,5 @@ reboot your computer. If that doesn't work check your firewall.
 Again the client will be very verbose and will dump some of the bytes sent to it. All you really have to worry about is the authentication
 If all goes well you should see at the bottom "Successfully logged in"
 From that shell you should be able to run the command mentioned previously.
+=======
+>>>>>>> cfa523f18177a182ca64e12ddaf5fa725749ca22
