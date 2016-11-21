@@ -117,6 +117,7 @@ int main(int argc,char *argv[]){
 			for(int i = 1; i < countc(cmd,' ') + 1;i++){
 				for(int j = 0; j < strlen(args[1]);j++)
 					send(sock,&args[i][j],1,0);
+				send(sock," ",1,0);
 			}
 			send(sock,&end,1,0);
 		}
