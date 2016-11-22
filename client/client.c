@@ -111,6 +111,10 @@ int main(int argc,char *argv[]){
 		else if(cmds == CMD_LSU || cmds == CMD_LS)
 			send(sock,&cmds,1,0);
 		else if(cmds == CMD_WS){
+			if(countc(cmd,' ') != 1){
+				printf("Invalid number of arguments\n");
+				continue;
+			}
 			send(sock,&cmds,1,0);
 			char *args[countc(cmd,' ') + 1];
 			__sep(args,cmd,' ');
@@ -120,6 +124,99 @@ int main(int argc,char *argv[]){
 				send(sock," ",1,0);
 			}
 			send(sock,&end,1,0);
+		}
+		else if(cmds == CMD_WRITE){
+			send(sock,&cmds,1,0);
+			int sb = 0x0f;
+			int byte = 1;
+
+			if(countc(cmd,' ') != 1){
+				printf("Invalid number of arguments\n");
+				continue;
+			}
+			char *args[countc(cmd,' ') + 1];
+			__sep(args,cmd,' ');
+			FILE *f = fopen(args[1],"rb");
+			if(!f){
+				perror("Failed to open file for reading");
+				continue;
+			}
+			a:printf("Enter name to save file under >");
+			char *svname = malloc(1024);
+			//scanf("%s",svname);
+			fgets(svname,1024,stdin);
+			svname[strlen(svname) - 1] = 0;
+			printf("Using name:%s\n",svname);
+			for(int i = 0; i < strlen(svname);i++)
+				send(sock,&svname[i],1,0);
+			send(sock,&end,1,0);
+			fseek(f,0,SEEK_END);
+			uint32_t size = ftell(f);
+			fseek(f,0,SEEK_SET);
+			printf("Read file %d bytes\n",size);
+			int res;
+			while(1){
+				int tmpb;
+				recv(sock,&tmpb,1,0);
+				if(tmpb == 0x0f)
+					break;
+			}
+			recv(sock,&res,1,0);
+			if(res != 5){
+				printf("Invalid name got byte: %d\n",res);
+				goto a;
+			}
+			/*int res = 0;
+			recv(sock,&res,1,0);
+			if(res != 5)
+				goto a;
+			struct file_data *fdat = malloc(sizeof(*fdat) * sizeof(struct file_data *));
+			fdat->alloc = 1;
+			fdat->data_length = 12 + strlen(fin->user) + strlen(args[1]);
+			fseek(f,0,SEEK_END);
+			fdat->file_size = ftell(f);
+			fseek(f,0,SEEK_SET);
+			fdat->username_len = strlen(fin->user);
+			fdat->path_len = strlen(args[1]);
+			strcat(fdat->username,fin->user);
+			strcat(fdat->path,args[1]);
+			char bytes[] = {fdat->alloc,fdat->data_length >> 24, fdat->data_length >> 16,fdat->data_length >> 8,fdat->data_length,fdat->path_len >> 8,fdat->path_len,fdat->file_size >> 24,fdat->file_size >> 16,fdat->file_size >> 8,fdat->file_size,fdat->username_len};
+			for(int i = 0; i < 12;i++)
+				send(sock,&bytes[i],1,0);
+			for(int i = 0; i < fdat->username_len; i++)
+				send(sock,&fdat->username[i],1,0);
+			for(int i = 0; i < fdat->path_len;i++)
+				send(sock,&fdat->path[i],1,0);
+			send(sock,&end,1,0);*/
+			struct file_ent *fent = malloc(sizeof(*fent) * sizeof(struct file_ent *));
+			fent->alloc = 1;
+			fent->entlen = 7 + strlen(fin->user);
+			fent->creatorLen = strlen(fin->user);
+			strcat(fent->creatorName,fin->user);
+			fent->namelen = strlen(svname);
+			strcat(fent->name,svname);
+			fent->datalen = size;
+			char _bytes[] = {fent->alloc,fent->entlen,fent->creatorLen,fent->datalen >> 24,fent->datalen >> 16,fent->datalen >> 8,fent->datalen};
+			for(int i = 0; i < 7; i++)
+				send(sock,&_bytes[i],1,0);
+			for(int i = 0; i < fent->creatorLen;i++)
+				send(sock,&fent->creatorName[i],1,0);
+			send(sock,&end,1,0);
+			//printf("Uploading file\n");
+			int c = 1;
+			uint32_t nsize = htonl(size);
+			//char by[4] = {size >> 24,size >> 16,size >> 8,size};
+			send(sock,&nsize,sizeof(uint32_t),0);
+			//for(int i = 0; i < 4;i++)
+			//	printf("[%d]\n",by[i]);
+			printf("Uploading file\n");
+			int bytes_written = 0;
+			while((c = getc(f)) != EOF){
+				send(sock,&c,1,0);
+			}
+			fclose(f);
+		}else if(cmds == CMD_LF){
+
 		}
 		else{
 			printf("Invalid Command!\n");

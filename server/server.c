@@ -17,6 +17,7 @@
 #include <opensm_libio.h>
 #include <libmisc.h>
 #include <libuser.h>
+#include <inttypes.h>
 void usage(char *arg){
 	printf("%s config_file\n",arg);
 }
@@ -32,6 +33,8 @@ int main(int argc,char *argv[]){
 	}
 	struct __server_cfg *cfg = parse_cfg(f);
 	fclose(f);
+	if(cfg == (struct __server_cfg*)-1)
+		return -1;
 	printf("openSM Server V0.1-Alpha\n");
 	printf("Starting up\n");
 	int opt = 1;
@@ -233,7 +236,7 @@ int main(int argc,char *argv[]){
 						recv(new_socket,&cmd,1,0);
 					}
 					int res = ERR_INVALIDCMD;
-					if(cmd == CMD_LSU || cmd == CMD_WS || cmd == CMD_LS)
+					if(cmd == CMD_LSU || cmd == CMD_WS || cmd == CMD_LS || cmd == CMD_WRITE || cmd == CMD_LF)
 						res = VALID_CMD;
 					send(new_socket,&res,1,0);
 					if(cmd == ERR_INVALIDCMD)
@@ -269,7 +272,7 @@ int main(int argc,char *argv[]){
 					else if(cmd == CMD_WS){
 						printf("Got command write story\n");
 						char *raw = malloc(1024);
-						int c;
+						int c = 0;
 						int n = 0;
 						while(1){
 							recv(new_socket,&c,1,0);
@@ -358,6 +361,65 @@ int main(int argc,char *argv[]){
 							}
 						}
 						send(new_socket,&end,1,0);
+					}else if(cmd == CMD_WRITE){
+						printf("Got command write!\n");
+						int b = 0;
+						char *fpath = malloc(1024);
+						a:;
+						char *name = malloc(1024);
+						int c = 0;
+						int i = 0;
+						while(1){
+							recv(new_socket,&c,1,0);
+							if(c == END)
+								break;
+							name[i] = c;
+							i++;
+						}
+						printf("Got name: %s\n",name);
+						b = 0;
+						i = 0;
+						sprintf(fpath,"%s/%s",cfg->file_path,name);
+						char resb;
+						FILE *f;
+						if( access( fpath,F_OK) == -1)
+							resb = 5;
+						else
+							resb = 1;
+						int tmpb = 0x0f;
+						send(new_socket,&tmpb,1,0);
+						send(new_socket,&resb,1,0);
+						if(resb != 5){
+							printf("Invalid name!\n");
+							goto a;
+						}
+
+						printf("Opening file %s\n",fpath);
+						c = 0;
+						f = fopen(fpath,"wb");
+						printf("Reciving file...");
+						while(1){
+							recv(new_socket,&c,1,0);
+							if(c == END)
+								break;
+							putc(c,f);
+						}
+						char *_size = malloc(80);;
+						int s = 0x1f,r;
+						uint32_t size;
+						recv(new_socket,&size,sizeof(uint32_t),0);
+						size = ntohl(size);
+						printf("File is %z" PRIu32" bytes\n",size);
+						c = 0;
+						i = 0;
+						while(i < size){
+							recv(new_socket,&c,1,0);
+							putc(c,f);
+							//printf("%d ",c);
+							i++;
+						}
+						printf("Done");
+						fclose(f);
 					}
 
 				}

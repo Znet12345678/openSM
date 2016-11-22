@@ -43,6 +43,8 @@ int parse_command(char *cmd){
 		return CMD_LS;
 	else if(strcmp(args[0],"exit") == 0)
 		return CMD_EXIT;
+	else if(strcmp(args[0],"write") == 0)
+		return CMD_WRITE;
 	else
 		return ERR_INVALIDCMD;
 }

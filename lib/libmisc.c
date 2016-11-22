@@ -70,7 +70,7 @@ int isnum(char *str){
 struct __server_cfg *parse_cfg(FILE *f){
 	struct __server_cfg *ret = malloc(sizeof(struct __server_cfg *) * sizeof(*ret));
 	char *line = malloc(1024);
-	int b[4];
+	int b[5];
 	int linenum = 1;
 	while((fgets(line,1024,f))){
 		line[strlen(line) - 1] = 0;
@@ -99,6 +99,10 @@ struct __server_cfg *parse_cfg(FILE *f){
 			strcpy(ret->story_path,args[1]);
 			b[3] = 1;
 		}
+		else if(strcmp(args[0],"file_path") == 0){
+			strcpy(ret->file_path,args[1]);
+			b[4] = 1;
+		}
 		else{
 			printf("Invalid paremeter: %s\n@linenum %d line %s\n",args[0],linenum,line);
 			return (struct __server_cfg *)-1;
@@ -119,6 +123,10 @@ struct __server_cfg *parse_cfg(FILE *f){
 	}
 	if(b[3] != 1){
 		printf("Couldn't find required parameter 'story_path'\n");
+		return (struct __server_cfg *)-1;
+	}
+	if(b[4] != 1){
+		printf("Couldn't find required parameter 'file_path'\n");
 		return (struct __server_cfg *)-1;
 	}
 	return ret;

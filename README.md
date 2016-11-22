@@ -23,6 +23,7 @@ maxConnections: 100 //100 people can be connected at once
 maxUsers: 200 //200 users can exist on the system
 user_path: /root/opensm_server/users //User files are stored in this directory
 story_path: /root/opensm_server/stories //Story files are stored in this directory
+file_path: /root/opensm_server/files //Stores user files in this directory
 # Using the server
 All you have to do is execute the binary(server/server.proto) and pass your config file as an argument
 From there it will parse the config and run the server

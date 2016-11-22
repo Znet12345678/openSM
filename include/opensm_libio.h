@@ -31,15 +31,7 @@ struct file_data{
 	char username[80];
 	char path[1024];
 };
-/*
-*Contains server config
-*not yet implemented
-*/
-struct config{
-	uint32_t maxConnections;
-	uint32_t maxUsers;
-	char path[80];
-};
+
 /*
 *Contains data on the properties and contents of a file posted to a wall
 */
@@ -48,11 +40,13 @@ struct file_ent{
 	int entlen;
 	int creatorLen;
 	char creatorName[80];
-	int creatorIpLen;
-	char creatorIp[80];
+	int namelen;
+	char name[80];
 	int datalen;
 	//data
 };
+int write_file_ent_head(FILE *f,struct file_ent *ent);
+struct file_ent *parse_file_ent_head(FILE *f);
 /*
 *Reads data from file f to memory then stores it in a struct txt_data
 *Started:10/16/16

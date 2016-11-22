@@ -2,3 +2,4 @@ maxConnections: 100
 maxUsers: 200
 user_path: /root/opensm_server/users
 story_path: /root/opensm_server/stories
+file_path: /root/opensm_server/files

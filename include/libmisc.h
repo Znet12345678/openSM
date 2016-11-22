@@ -15,6 +15,8 @@
 #define CMD_WS 0x02
 #define CMD_LS 0x03
 #define CMD_EXIT 0x04
+#define CMD_WRITE 0x05
+#define CMD_LF 0x06
 #define END 0x7F
 #define END_SEC 0x6F
 //prints Developer warning
@@ -24,6 +26,7 @@ struct __server_cfg{
 	uint32_t maxusers;
 	char user_path[80];
 	char story_path[80];
+	char file_path[80];
 };
 struct __server_cfg *parse_cfg(FILE *f);
 #endif

@@ -80,10 +80,6 @@ struct txt_data *parse_txt_data(const char *buf){
 struct file_data *parse_file_data_file(FILE *f){
 	struct file_data *ret = malloc(sizeof(struct file_data *) * sizeof(*ret));
 	int c;
-	int len;
-	fseek(f,1,SEEK_SET);
-	len = fgetc(f);
-	fseek(f,0,SEEK_SET);
 	ret->alloc = fgetc(f);
 	ret->data_length = fgetc(f) << 24 | fgetc(f) << 16 | fgetc(f) << 8| fgetc(f);
 	ret->path_len = fgetc(f) << 8 | fgetc(f);
@@ -117,4 +113,32 @@ int write_file_data_file(FILE *f,struct file_data *d){
 	for(int i = 0; i < d->path_len;i++)
 		putc(d->path[i],f);
 	return 1;
+}
+int write_file_ent_head(FILE *f,struct file_ent *ent){
+	putc(ent->alloc,f);
+	putc(ent->entlen,f);
+	putc(ent->creatorLen,f);
+	for(int i = 0; i < ent->creatorLen; i++)
+		putc(ent->creatorName[i],f);
+	putc(ent->namelen,f);
+	for(int i = 0; i < ent->namelen;i++)
+		putc(ent->name[i],f);
+	putc(ent->datalen >> 24,f);
+	putc(ent->datalen >> 16,f);
+	putc(ent->datalen >> 8,f);
+	putc(ent->datalen,f);
+	return 1;
+}
+struct file_ent *parse_file_ent_head(FILE *f){
+	struct file_ent *ret = malloc(sizeof(*ret) * sizeof(struct file_ent *));
+	ret->alloc = getc(f);
+	ret->entlen = getc(f);
+	ret->creatorLen = getc(f);
+	for(int i = 0; i < ret->creatorLen;i++)
+		ret->creatorName[i] = getc(f);
+	ret->namelen = getc(f);
+	for(int i = 0; i < ret->namelen;i++)
+		ret->name[i] = getc(f);
+	ret->datalen = getc(f) << 24 | getc(f) << 16 | getc(f) << 8 | getc(f);
+	return ret;
 }
