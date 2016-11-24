@@ -126,7 +126,9 @@ int main(int argc,char *argv[]){
 			send(sock,&end,1,0);
 		}
 		else if(cmds == CMD_WRITE){
+			int zero = 0;
 			send(sock,&cmds,1,0);
+
 			int sb = 0x0f;
 			int byte = 1;
 
@@ -154,17 +156,17 @@ int main(int argc,char *argv[]){
 			uint32_t size = ftell(f);
 			fseek(f,0,SEEK_SET);
 			printf("Read file %d bytes\n",size);
-			int res;
-			while(1){
-				int tmpb;
-				recv(sock,&tmpb,1,0);
-				if(tmpb == 0x0f)
-					break;
-			}
+			int res, _sendb = 0x1F;
 			recv(sock,&res,1,0);
-			if(res != 5){
-				printf("Invalid name got byte: %d\n",res);
-				goto a;
+			while(1){
+				if(res == 5)
+					break;
+				else if(res == 1){
+					printf("Invalid name!\n");
+					goto a;
+				}
+				else
+					recv(sock,&res,1,0);
 			}
 			/*int res = 0;
 			recv(sock,&res,1,0);
@@ -209,6 +211,8 @@ int main(int argc,char *argv[]){
 			send(sock,&nsize,sizeof(uint32_t),0);
 			//for(int i = 0; i < 4;i++)
 			//	printf("[%d]\n",by[i]);
+			printf("Syncing...\n");
+			int __sendb = 0x1f,_recvb;
 			printf("Uploading file\n");
 			int bytes_written = 0;
 			while((c = getc(f)) != EOF){
@@ -230,11 +234,13 @@ int main(int argc,char *argv[]){
 			continue;
 		}
 		int c = 0;
-		while(1){
-			recv(sock,&c,1,0);
-			if(c == END)
-				break;
-			printf("%c",c);
+		if(cmds != CMD_WRITE){
+			while(1){
+				recv(sock,&c,1,0);
+				if(c == END)
+					break;
+				printf("%c",c);
+			}
 		}
 		send(sock,&end,1,0);
 	}

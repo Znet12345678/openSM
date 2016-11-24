@@ -362,6 +362,8 @@ int main(int argc,char *argv[]){
 						}
 						send(new_socket,&end,1,0);
 					}else if(cmd == CMD_WRITE){
+						int sendb = 0x0f,resvb;
+						int zero = 0;
 						printf("Got command write!\n");
 						int b = 0;
 						char *fpath = malloc(1024);
@@ -386,8 +388,6 @@ int main(int argc,char *argv[]){
 							resb = 5;
 						else
 							resb = 1;
-						int tmpb = 0x0f;
-						send(new_socket,&tmpb,1,0);
 						send(new_socket,&resb,1,0);
 						if(resb != 5){
 							printf("Invalid name!\n");
@@ -412,6 +412,7 @@ int main(int argc,char *argv[]){
 						printf("File is %z" PRIu32" bytes\n",size);
 						c = 0;
 						i = 0;
+						int _sendb = 0x0f,_recvb;
 						while(i < size){
 							recv(new_socket,&c,1,0);
 							putc(c,f);
