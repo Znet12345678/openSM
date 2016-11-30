@@ -362,16 +362,17 @@ int main(int argc,char *argv[]){
 						}
 						send(new_socket,&end,1,0);
 					}else if(cmd == CMD_WRITE){
-						int sendb = 0x0f,resvb;
+						a:;int sendb = 0x0f,resvb;
 						int zero = 0;
 						printf("Got command write!\n");
 						int b = 0;
 						char *fpath = malloc(1024);
-						a:;
 						char *name = malloc(1024);
 						int c = 0;
 						int i = 0;
-						while(1){
+						uint32_t size;
+						recv(new_socket,&size,1,0);
+						while(i < size){
 							recv(new_socket,&c,1,0);
 							if(c == END)
 								break;
@@ -406,20 +407,19 @@ int main(int argc,char *argv[]){
 						}
 						char *_size = malloc(80);;
 						int s = 0x1f,r;
-						uint32_t size;
+						size = 0;
 						recv(new_socket,&size,sizeof(uint32_t),0);
 						size = ntohl(size);
 						printf("File is %z" PRIu32" bytes\n",size);
 						c = 0;
 						i = 0;
-						int _sendb = 0x0f,_recvb;
 						while(i < size){
 							recv(new_socket,&c,1,0);
 							putc(c,f);
-							//printf("%d ",c);
+							printf("%d ",c);
 							i++;
 						}
-						printf("Done");
+						printf("Done\n");
 						fclose(f);
 					}
 

@@ -111,10 +111,10 @@ int main(int argc,char *argv[]){
 		else if(cmds == CMD_LSU || cmds == CMD_LS)
 			send(sock,&cmds,1,0);
 		else if(cmds == CMD_WS){
-			if(countc(cmd,' ') != 1){
-				printf("Invalid number of arguments\n");
-				continue;
-			}
+			//if(countc(cmd,' ') != 1){
+			//	printf("Invalid number of arguments\n");
+			//	continue;
+			//}
 			send(sock,&cmds,1,0);
 			char *args[countc(cmd,' ') + 1];
 			__sep(args,cmd,' ');
@@ -145,12 +145,14 @@ int main(int argc,char *argv[]){
 			}
 			a:printf("Enter name to save file under >");
 			char *svname = malloc(1024);
-			//scanf("%s",svname);
-			fgets(svname,1024,stdin);
-			svname[strlen(svname) - 1] = 0;
+			scanf("%s",svname);
+			//fgets(svname,1024,stdin);
+			int s = strlen(svname);
+			send(sock,&s,1,0);
 			printf("Using name:%s\n",svname);
-			for(int i = 0; i < strlen(svname);i++)
+			for(int i = 0; i < strlen(svname);i++){
 				send(sock,&svname[i],1,0);
+			}
 			send(sock,&end,1,0);
 			fseek(f,0,SEEK_END);
 			uint32_t size = ftell(f);
@@ -205,18 +207,17 @@ int main(int argc,char *argv[]){
 				send(sock,&fent->creatorName[i],1,0);
 			send(sock,&end,1,0);
 			//printf("Uploading file\n");
-			int c = 1;
 			uint32_t nsize = htonl(size);
 			//char by[4] = {size >> 24,size >> 16,size >> 8,size};
 			send(sock,&nsize,sizeof(uint32_t),0);
 			//for(int i = 0; i < 4;i++)
 			//	printf("[%d]\n",by[i]);
-			printf("Syncing...\n");
-			int __sendb = 0x1f,_recvb;
 			printf("Uploading file\n");
 			int bytes_written = 0;
+			int c = 0;
 			while((c = getc(f)) != EOF){
 				send(sock,&c,1,0);
+				bytes_written++;
 			}
 			fclose(f);
 		}else if(cmds == CMD_LF){
